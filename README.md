@@ -1,3 +1,5 @@
+**EDITED FOR USE ON RASPBERRY PI (ARMV7)**
+
 [![SlamDevs](https://telegra.ph/file/143032e96542e7534f073.jpg)](https://t.me/SlamDevs)
 
 # Slam Mirror Bot
@@ -89,19 +91,10 @@ For Debian based distros
 ```
 sudo apt install python3
 ```
-Install Docker by following the [official Docker docs](https://docs.docker.com/engine/install/debian/)
-
-OR
-```
-sudo snap install docker 
-```
-- For Arch and it's derivatives:
-```
-sudo pacman -S docker python
 ```
 - Install dependencies for running setup scripts:
 ```
-pip3 install -r requirements-cli.txt
+pip3 install -r requirements.txt
 ```
 ## Generate Database
 <details>
@@ -116,9 +109,6 @@ pip3 install -r requirements-cli.txt
 - Hit `Create instance`
 - Select your database name
 - Copy your database url, and fill to `DATABASE_URL` in config
-
-**2. Using Heroku PostgreSQL**
-<p><a href="https://dev.to/prisma/how-to-setup-a-free-postgresql-database-on-heroku-1dc1"> <img src="https://img.shields.io/badge/See%20Dev.to-black?style=for-the-badge&logo=dev.to" width="160""/></a></p>
 
 </details>
 
@@ -167,8 +157,10 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `UPTOBOX_TOKEN`: Uptobox token to mirror uptobox links. Get it from [Uptobox Premium Account](https://uptobox.com/my_account).
 - `IGNORE_PENDING_REQUESTS`: If you want the bot to ignore pending requests after it restarts, set this to `True`.
 - `STATUS_LIMIT`: Limit the no. of tasks shown in status message with button. (**NOTE**: Recommended limit is `4` tasks at max).
-- `IS_VPS`: (Only for VPS) Don't set this to `True` even if you are using VPS, unless facing error with web server. Also go to start.sh and replace `$PORT` by `80` or any other port you want to use.
-- `SERVER_PORT`: Only For VPS even if `IS_VPS` is `False` --> Base URL Port
+       //( Set Is_VPS True and Change port if you use Apache )
+- `IS_VPS`: (Only for VPS) Don't set this to `True` even if you are using VPS, unless facing error with web server. Also go to start.sh and replace `$PORT` by `80` or any other port you want to use. 
+- `SERVER_PORT`: Only For VPS even if `IS_VPS` is `False` --> Base URL Port 
+ //
 - `BASE_URL_OF_BOT`: (Required for Heroku to avoid sleep/idling) Valid BASE URL of app where the bot is deployed. Format of URL should be `http://myip` (where `myip` is the IP/Domain of your bot) or if you have chosen other port than `80` then fill in this format `http://myip:port`, for Heroku fill `https://yourappname.herokuapp.com` (**NOTE**: Do not put slash at the end), still got idling? You can use http://cron-job.org to ping your Heroku app.
 - `RECURSIVE_SEARCH`: Set this to `True` to search in sub-folders with `/list` (**NOTE**: This will only work with shared-drive ID or fill `root` for main drive. Folder IDs are not compatible with it.)
 - `TG_SPLIT_SIZE`: Size Telegram split, leave it empty for max size `2GB`
@@ -248,69 +240,6 @@ ping - Ping the Bot
 pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
 python3 generate_drive_token.py
 ```
-
-## Deploying On VPS
-
-**IMPORTANT NOTE**: You must set `SERVER_PORT` variable to `80` or any other port you want to use.
-
-- Start Docker daemon (skip if already running):
-```
-sudo dockerd
-```
-- Build Docker image:
-```
-sudo docker build . -t mirror-bot
-```
-- Run the image:
-```
-sudo docker run -p 80:80 mirror-bot
-```
-OR
-
-**NOTE**: If you want to use port other than 80, change it in [docker-compose.yml](https://github.com/SlamDevs/slam-mirrorbot/blob/master/docker-compose.yml)
-
-- Using Docker-compose, you can edit and build your image in seconds:
-```
-sudo apt install docker-compose
-```
-- Build and run Docker image:
-```
-sudo docker-compose up
-```
-- After editing files with nano for example (nano start.sh):
-```
-sudo docker-compose build
-sudo docker-compose up
-```
-OR
-```
-sudo docker-compose up --build
-```
-- To stop Docker: 
-```
-sudo docker ps
-```
-```
-sudo docker stop id
-```
-- To clear the container (this will not affect the image):
-```
-sudo docker container prune
-```
-- To delete the image:
-```
-sudo docker image prune -a
-```
-- Tutorial video from Tortoolkit repo
-<p><a href="https://youtu.be/c8_TU1sPK08"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
-
-## Deploying on Heroku
-- Deploying on Heroku with Github Workflow
-<p><a href="https://github.com/SlamDevs/slam-mirrorbot/wiki/Deploying-slam-mirrorbot-on-Heroku-with-Github-Workflows"> <img src="https://img.shields.io/badge/Deploy%20Guide-blueviolet?style=for-the-badge&logo=heroku" width="170""/></a></p>
-
-- Deploying on Heroku with heroku-cli and Goorm IDE
-<p><a href="https://telegra.ph/How-to-Deploy-a-Mirror-Bot-to-Heroku-with-CLI-05-06"> <img src="https://img.shields.io/badge/Deploy%20Guide-grey?style=for-the-badge&logo=telegraph" width="170""/></a></p>
-
 # Using Service Accounts for uploading to avoid user rate limit
 For Service Account to work, you must set `USE_SERVICE_ACCOUNTS` = "True" in config file or environment variables.
 **NOTE**: Using Service Accounts is only recommended while uploading to a Team Drive.
